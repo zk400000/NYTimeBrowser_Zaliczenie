@@ -2,7 +2,6 @@
   "name": "projekt_zaliczeniowy",
   "version": "0.0.0",
   "scripts": {
-    "db": "json-server --watch ./sandwiches.json",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
