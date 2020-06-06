@@ -1,0 +1,28 @@
+<h3> ---{{ headingTitle }}</h3>
+<img src="assets/home-clipart.png" height="100" width=auto *ngIf = 'this.appInfo.isActive' >
+
+szukana fraza:
+<input type="text" name="searchtext" id="" [(ngModel)]="searchtext" (click)=inputDataChanged()> <br/>
+w artykuach o datach publikacji 
+od:
+<input type="date" name="dateFrom" id="" [(ngModel)]="dateFrom" (click)="dateFromChanged()">
+do:
+<input type="date" name="dateEnd" id="" [(ngModel)]="dateEnd" (click)=dateEndChanged()>
+Najnowsze: <input type="radio" [(ngModel)]="sortingTime" value="newest">
+Najstarsze: <input type="radio" [(ngModel)]="sortingTime" value="oldest">
+<br/>
+<button (click)="refreshArticles()">Wyświetl Artykuły</button>
+
+ <div>
+    Ilość artykułów na stronie: {{ ArticlesCount }} 
+    Ilość trafień: {{ AllArticlesMatched }}
+        <a href="#" (click)=navigationLeft() *ngIf = 'this.isLeftNavButtonActive'>< Poprzednie</a>    
+        <a href="#" (click)=navigationRight() *ngIf = 'this.isRightNavButtonActive' > Następne></a>
+        
+       
+    <div *ngFor="let article of articles">
+         <li>
+          <a href="{{ article.web_url }}" target="_blank">{{ article.headline.main }}</a>
+        </li>
+    </div>
+</div>

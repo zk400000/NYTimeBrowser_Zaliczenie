@@ -1,0 +1,24 @@
+{
+    "sandwiches" : [
+        {
+            "name": "Vege Sandwich",
+            "indigredients": [
+                "lettuce",
+                "egg"
+            ],
+            "sauce": "mayo",
+            "vege": true,
+            "price": 19.99
+        },
+        {
+            "name": "Ham Sandwich",
+            "indigredients": [
+                "cheese",
+                "ham"
+            ],
+            "sauce": "bbq",
+            "vege": false,
+            "price": 24.99
+        }
+    ]
+}
