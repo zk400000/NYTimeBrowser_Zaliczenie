@@ -1,8 +1,13 @@
-<div style="text-align:center">
-    <h2>{{ title }} </h2>    
-    <nav>
-        <a routerLink="/" routerLinkActive="active">Strona Główna</a>
-        <a routerLink="/about">O Wyszukiwarce</a>
-    </nav>
-   <router-outlet></router-outlet>
+<div>
+  <nav class="title-bar">
+    <div class="title-bar-left page_font"> Wyszukiwarka artukułów <b>NYTime</b></div>
+    <div class="title-bar-right"> 
+      <ul class="menu">
+        <a routerLink="/" routerLinkActive="active"class="tiny button">Strona Główna</a>
+        <a routerLink="/about"class="tiny button">O wyszukiwarce</a>
+      </ul>
+    </div>
+  </nav>
+  <router-outlet></router-outlet>
 </div>
+

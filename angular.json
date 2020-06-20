@@ -5,7 +5,11 @@
   "projects": {
     "projekt_zaliczeniowy": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "styleext": "scss"
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -24,9 +28,12 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styless.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/foundation-sites/dist/js/foundation.min.js"
+            ]
           },
           "configurations": {
             "production": {

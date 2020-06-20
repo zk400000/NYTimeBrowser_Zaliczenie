@@ -1,27 +1,26 @@
-import { Component, OnInit, OnChanges } from '@angular/core'; //'optimised import': usuwanie nieużywanych importów ALT+SHIFT+O
+import { Component, OnInit, OnChanges } from '@angular/core'; 
 import { AppInfoService } from 'src/app-info/app-info.service';
-import { timingSafeEqual } from 'crypto';
-
 
 @Component({
     selector: 'wsb-home', 
     templateUrl: './home.component.html',
-    styleUrls: ['./home.component.css']
+    styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, OnChanges {
-    headingTitle = "Podaj zakres dat wyświetlanych artykułów"
     today = new Date();
     public dateFrom: string =  "2016-01-01";
     public dateEnd: string =  "2018-01-01";
     articles: any = [];
-    ArticlesCount = 0;
-    AllArticlesMatched = 0;
-    ArticuleCurrentOffset=0;
+    ArticlesCount: number = 0;
+    AllArticlesMatched: number = 0;
+    ArticuleCurrentOffset: number =0;
     sortingTime: string = "newest"
     i: number =0;
     searchtext: string ="";
     isLeftNavButtonActive:boolean = false;
     isRightNavButtonActive:boolean = false;
+    isPagginationActive:boolean=false;
+    isNoArticleWarningValid:boolean=false;
     currentPage: number =0;
 
     getCurrentDateInApiFormat(): string{
@@ -41,12 +40,15 @@ export class HomeComponent implements OnInit, OnChanges {
     }
 
 
-    refreshArticles() {
-        //this.isActive = this.isActive ? false : true ;  
-       //alert ("ja");
+    refreshArticles() { 
        // zapytanie do HTTP do jasonplaceholders.typicode.com/users
+        interface  MyType {
+            status: any;
+            response: any;
+        }
+
        this.appInfo.getNYTimeSelectedArticles(this.dateFrom,this.dateEnd, this.sortingTime, this.searchtext, this.currentPage) //;-> promise
-            .then(httpResponse=> {
+            .then((httpResponse: MyType)=> {
                 //this.httpResponse = response;
                 console.log("moj full response ", httpResponse);
                 console.log("moj response status", httpResponse.status);
@@ -55,18 +57,22 @@ export class HomeComponent implements OnInit, OnChanges {
                 this.ArticlesCount = httpResponse.response.docs.length;
                 this.AllArticlesMatched = httpResponse.response.meta.hits;
                 this.ArticuleCurrentOffset =httpResponse.response.meta.offset;
+                this.isPagginationActive = this.ArticlesCount > 0 ? true: false;
+                this.isNoArticleWarningValid =this.ArticlesCount > 0 ? false: true;
                 if(this.ArticuleCurrentOffset>0) {
                     this.isLeftNavButtonActive = true
                 } 
                 else {
                     this.isLeftNavButtonActive = false
                 }
-
-
-                if (this.ArticlesCount+this.ArticuleCurrentOffset + this.ArticlesCount < this.AllArticlesMatched ) {
-                    this.isRightNavButtonActive = true} else {
+                console.log("this.ArticlesCount" + this.ArticlesCount + "this.ArticuleCurrentOffset" + this.ArticuleCurrentOffset + "this.AllArticlesMatched" + this.AllArticlesMatched)
+                if (this.ArticlesCount + this.ArticuleCurrentOffset < this.AllArticlesMatched ) {
+                    this.isRightNavButtonActive = true
+                } 
+                else {
                     this.isRightNavButtonActive = false
                 }
+                console.log("this.isRightNavButtonActive"+ this.isRightNavButtonActive);
                 this.currentPage = Math.floor(this.ArticuleCurrentOffset / this.ArticlesCount);
 
                 console.log("currenct page", this.currentPage )
@@ -87,25 +93,11 @@ export class HomeComponent implements OnInit, OnChanges {
         console.log('wywołano OnChanges', this.getCurrentDateInApiFormat());
     }
 
-    dateEndChanged() {
-        let tempDate:Date=null;
-        tempDate=new Date(Number(Date.parse(this.dateEnd)))
-        if( tempDate > this.today) {
-            this.dateEnd = this.getCurrentDateInApiFormat();
-        }
+    dateEndChanged() {     
         this.currentPage=0;
-        this.dateFromChanged();
     }
     dateFromChanged () {
-        let tempDateEnd:Date=null;
-        let tempDateFrom:Date=null;
-        tempDateEnd=new Date(Number(Date.parse(this.dateEnd)))
-        tempDateFrom=new Date(Number(Date.parse(this.dateFrom)))
-        if( tempDateFrom > tempDateEnd) {
-            this.dateFrom = this.dateEnd;
-        }
         this.currentPage=0;
-        this.dateEndChanged();
     }
 
     navigationLeft() {
@@ -115,13 +107,31 @@ export class HomeComponent implements OnInit, OnChanges {
         this.refreshArticles();
     }
     navigationRight() {
-        console.log (this.currentPage)
-        ++this.currentPage;
-        this.refreshArticles();
+        if(this.isRightNavButtonActive===true) {
+            console.log (this.currentPage)
+            ++this.currentPage;
+            this.refreshArticles();
+        }
     }
 
     inputDataChanged(){
         this.currentPage=0;
+    }
+
+    parityChecker(item:number):boolean {
+        return (item % 2==0) ? true: false;
+    }
+
+    navigationItem(item:number) {
+        this.currentPage=item;
+        console.log (this.currentPage)
+        this.refreshArticles();
+    }
+
+    SubjectArticle(subject:string) {
+        this.searchtext = subject;
+        this.currentPage=0;
+        this.refreshArticles();
     }
 
 }

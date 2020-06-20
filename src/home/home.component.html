@@ -1,28 +1,75 @@
-<h3> ---{{ headingTitle }}</h3>
-<img src="assets/home-clipart.png" height="100" width=auto *ngIf = 'this.appInfo.isActive' >
 
-szukana fraza:
-<input type="text" name="searchtext" id="" [(ngModel)]="searchtext" (click)=inputDataChanged()> <br/>
-w artykuach o datach publikacji 
-od:
-<input type="date" name="dateFrom" id="" [(ngModel)]="dateFrom" (click)="dateFromChanged()">
-do:
-<input type="date" name="dateEnd" id="" [(ngModel)]="dateEnd" (click)=dateEndChanged()>
-Najnowsze: <input type="radio" [(ngModel)]="sortingTime" value="newest">
-Najstarsze: <input type="radio" [(ngModel)]="sortingTime" value="oldest">
-<br/>
-<button (click)="refreshArticles()">Wyświetl Artykuły</button>
-
- <div>
-    Ilość artykułów na stronie: {{ ArticlesCount }} 
-    Ilość trafień: {{ AllArticlesMatched }}
-        <a href="#" (click)=navigationLeft() *ngIf = 'this.isLeftNavButtonActive'>< Poprzednie</a>    
-        <a href="#" (click)=navigationRight() *ngIf = 'this.isRightNavButtonActive' > Następne></a>
-        
-       
-    <div *ngFor="let article of articles">
-         <li>
-          <a href="{{ article.web_url }}" target="_blank">{{ article.headline.main }}</a>
-        </li>
+<div class="row expanded" data-tooltip tabindex="1" title="Data zakresu wyszukiwania 'od'">
+    <div class="small-2 columns">
+        <label>od daty:</label>
+        <input type="date" name="dateFrom" [(ngModel)]="dateFrom" class="date_input" (click)="dateFromChanged()" >
+    </div>
+    <div class="small-2 columns" data-tooltip tabindex="2" title="Data zakresu wyszukiwania 'do'">
+        <label>do daty:</label>
+        <input type="date" name="dateEnd" [(ngModel)]="dateEnd" class="date_input" (click)=dateEndChanged()>
+    </div>
+    <div class="small" data-tooltip tabindex="3" title="Wybierz metodę sortowania">
+        <label>Sortowanie:</label>
+        <label>
+            od najnowszych 
+            <input type="radio" [(ngModel)]="sortingTime" value="newest">
+            od najstarszych 
+            <input type="radio" [(ngModel)]="sortingTime" value="oldest"> 
+        </label>
     </div>
 </div>
+<div class="row expanded" data-tooltip tabindex="4" title="Wybierz teskt do wyszukania i naciśniej 'Szukaj'">
+    <ul class="small-12 columns menu">
+        <div class="input-group">
+            <input class="input-group-field" type="search" name="searchtext" id="" [(ngModel)]="searchtext" (click)=inputDataChanged() placeholder="Wyszukaj frazę">
+            <div class="input-group-button">
+                <input type="button" class="button" (click)="refreshArticles()" value="Szukaj">
+            </div>
+        </div>
+    </ul>
+</div>
+<p *ngIf = 'this.isNoArticleWarningValid' class="small-2 columns menu">Brak artykułów</p>
+<div *ngFor="let article of articles; index as i">
+    <div class="row expanded">
+        <ul class="small-2 columns"> </ul>
+        <ul class="small-8 columns menu"  [ngClass]="{'background_grey': (parityChecker(i))}">
+            <li>
+                <a href="{{ article.web_url }}" target="_blank">{{ article.headline.main }}</a>
+            </li>
+        </ul>
+        <ul class="small-2 columns"> </ul>
+    </div>
+</div>
+<div class="row expanded">
+    <ul class="small-2 columns"> </ul>
+    <ul class="small-8 columns menu">
+        <ul class="pagination" total-items="2" role="navigation" aria-label="Pagination" *ngIf = 'this.isPagginationActive'>
+            <hr>
+            <!-- <pagination total-items="10" page="3"></pagination> -->
+            <li><a href="#0" aria-label="Previous page" (click)=navigationLeft() [ngClass]="{'disabled': !this.isLeftNavButtonActive}">Poprzednia <span class="show-for-sr">strona</span></a></li>
+            <li><a href="#0" aria-label="Previous page" (click)=navigationRight() [ngClass]="{'disabled': !this.isRightNavButtonActive}">Następna <span class="show-for-sr">strona</span></a></li>
+            </ul>
+    </ul>
+    <ul class="small-2 columns"> </ul>
+</div>
+<div class="row expanded callout secondary">
+  
+    <div class="large-4 columns show-for-large" data-tooltip tabindex="5" title="Wybierz aktualne artykuły tematyczne">
+      <h5>ARTYKUŁY TEMATYCZNE</h5>
+      <span class="secondary label" (click)="SubjectArticle('News')">News</span>
+      <span class="secondary label" (click)="SubjectArticle('Sport')">Sport</span>
+      <span class="secondary label" (click)="SubjectArticle('Business')">Biznes</span>
+      <span class="secondary label" (click)="SubjectArticle('Technology')">Technologia</span>
+      <span class="secondary label" (click)="SubjectArticle('Home')">Dom</span>
+      <span class="secondary label" (click)="SubjectArticle('Relax')">Wypoczynek</span>
+      <span class="secondary label" (click)="SubjectArticle('Covid 19')">Covid19</span>
+    </div>
+
+    <div class="row expanded">
+        <div class="medium-6 columns">
+          <ul class="menu align-right">
+            <li class="menu-text">Copyright © 2020 Zbigniew Kazior</li>
+          </ul>
+        </div>
+      </div>
+  </div>
